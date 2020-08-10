@@ -1,0 +1,22 @@
+PODS:
+  - Flutter (1.0.0)
+  - headset_listener (0.0.1):
+    - Flutter
+
+DEPENDENCIES:
+  - Flutter (from `Flutter`)
+  - headset_listener (from `.symlinks/plugins/headset_listener/ios`)
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: Flutter
+  headset_listener:
+    :path: ".symlinks/plugins/headset_listener/ios"
+
+SPEC CHECKSUMS:
+  Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
+  headset_listener: 493d6b0b0c47ac70e24cd821731e131a01869e2e
+
+PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c
+
+COCOAPODS: 1.9.3
