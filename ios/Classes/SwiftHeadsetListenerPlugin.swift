@@ -29,11 +29,9 @@ public class SwiftHeadsetListenerPlugin: NSObject, FlutterPlugin {
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         switch call.method {
         case "isHeadphoneConnected":
-            let session = AVAudioSession.sharedInstance()
-            result(SwiftHeadsetListenerPlugin.hasHeadphones(in: session.currentRoute))
+            result(SwiftHeadsetListenerPlugin.hasHeadphones())
         case "isMicConnected":
-            let session = AVAudioSession.sharedInstance()
-            result(SwiftHeadsetListenerPlugin.hasMicrophone(in: session.currentRoute))
+            result(SwiftHeadsetListenerPlugin.hasMicrophone())
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -67,9 +65,8 @@ public class SwiftHeadsetListenerPlugin: NSObject, FlutterPlugin {
     static func onDeviceChange() {
         guard let eventSink = eventStreamHandler.eventSink else { return }
 
-        let session = AVAudioSession.sharedInstance()
-        let headphonesConnected = hasHeadphones(in: session.currentRoute)
-        let micConnected = hasMicrophone(in: session.currentRoute)
+        let headphonesConnected = hasHeadphones()
+        let micConnected = hasMicrophone()
 
         let event: [String: Any] = [
             "type": "DeviceChanged",
@@ -80,11 +77,15 @@ public class SwiftHeadsetListenerPlugin: NSObject, FlutterPlugin {
         eventSink(event)
     }
 
-    static func hasHeadphones(in routeDescription: AVAudioSessionRouteDescription) -> Bool {
-        routeDescription.outputs.filter({ $0.portType == .headphones || $0.portType == .bluetoothA2DP }).count > 0
+    static func hasHeadphones() -> Bool {
+        let session = AVAudioSession.sharedInstance()
+        return session.currentRoute.outputs.filter({ $0.portType == .headphones || $0.portType == .bluetoothA2DP }).count > 0
     }
 
-    static func hasMicrophone(in routeDescription: AVAudioSessionRouteDescription) -> Bool {
-        routeDescription.inputs.filter({ $0.portType == .headsetMic || $0.portType == .bluetoothHFP }).count > 0
+    static func hasMicrophone() -> Bool {
+        let session = AVAudioSession.sharedInstance()
+        try? session.setCategory(AVAudioSession.Category.playAndRecord, options: [.mixWithOthers, .allowBluetooth])
+        guard session.isInputAvailable, let inputs = session.availableInputs else { return false }
+        return inputs.filter({ $0.portType == .headsetMic || $0.portType == .bluetoothHFP }).count > 0
     }
 }
