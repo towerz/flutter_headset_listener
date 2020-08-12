@@ -23,6 +23,7 @@ public class SwiftHeadsetListenerPlugin: NSObject, FlutterPlugin {
         let instance = SwiftHeadsetListenerPlugin()
         registrar.addMethodCallDelegate(instance, channel: channel)
         FlutterEventChannel(name: "me.towerz.headsetlistener/event", binaryMessenger: registrar.messenger()).setStreamHandler(eventStreamHandler)
+        setupNotifications()
     }
 
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
@@ -80,10 +81,10 @@ public class SwiftHeadsetListenerPlugin: NSObject, FlutterPlugin {
     }
 
     static func hasHeadphones(in routeDescription: AVAudioSessionRouteDescription) -> Bool {
-        !routeDescription.outputs.filter({ $0.portType == .headphones || $0.portType == .bluetoothA2DP }).isEmpty
+        routeDescription.outputs.filter({ $0.portType == .headphones || $0.portType == .bluetoothA2DP }).count > 0
     }
 
     static func hasMicrophone(in routeDescription: AVAudioSessionRouteDescription) -> Bool {
-        !routeDescription.inputs.filter({ $0.portType == .headsetMic || $0.portType == .bluetoothHFP }).isEmpty
+        routeDescription.inputs.filter({ $0.portType == .headsetMic || $0.portType == .bluetoothHFP }).count > 0
     }
 }
