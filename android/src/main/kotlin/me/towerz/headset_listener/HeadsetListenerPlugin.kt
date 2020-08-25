@@ -68,7 +68,7 @@ public class HeadsetListenerPlugin: FlutterPlugin, MethodCallHandler {
         val devices = audioManager.getDevices(AudioManager.GET_DEVICES_ALL)
         return devices.any {
           when(it.type) {
-            AudioDeviceInfo.TYPE_BLUETOOTH_A2DP,
+            AudioDeviceInfo.TYPE_BLUETOOTH_SCO,
             AudioDeviceInfo.TYPE_WIRED_HEADSET -> true
             else -> false
           }
